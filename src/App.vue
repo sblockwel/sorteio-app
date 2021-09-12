@@ -1,101 +1,87 @@
 <template>
   <div>
     <h1>Sorteio - Vue</h1>
-    <p :title="informacao">Autor: {{autor.toUpperCase()}} - {{criacao}}</p>
-     
-    <button @click="trocarInformacoes()">Mostrar/Esconder informações</button> 
-    <div v-show="mostrarInformacoesComplementares">
-        <h2>Informações adicionais</h2>
+    <p :title="informacao">Autor: {{ autor.toUpperCase() }} - {{ criacao }} </p>
+    
+    <h2>Informações adicionais</h2>
 
-        <form @submit.prevent="adicionarProjeto">
-          <label for="nome"> Nome: </label><br/>
-          <input type="text" id="nome" autofocus required v-model="participante.nome"> <br/>
-          <label for="email"> Email: </label><br/>
-          <input type="email" id="email" required v-model="participante.email"> <br/><br/>
-          <input type="submit" value="Adicionar projeto" > <br/>
-        </form>
+    <form @submit.prevent="salvarParticipante">
+      <label for="nome"> Nome: </label><br />
+      <input type="text" id="nome" autofocus required v-model="participante.nome" />
+      <br />
+      <label for="email"> Email: </label><br />
+      <input type="email" id="email" required v-model="participante.email" />
+      <br /><br />
+      <input type="submit" :value="acao" />
+    </form>
 
-        <ul>
-           <li v-for="p in participantes" :key="p.nome">{{p.nome}} <button @click="remover(p)"> Remover</button> <button @click="alterar(p)"> Alterar</button> </li>
-        </ul>
-
-    </div> 
+    <table>
+      <tr>
+        <th>Nome</th>
+        <th>Email</th>
+        <th></th>
+      </tr>
+      <tr v-for="(p, idx) in participantes" :key="p.nome" :class="{ 'alteracao': alteracaoIdx == idx }">
+        <td>{{ p.nome }}</td>
+        <td>{{ p.email }}</td>
+        <td>
+          <button @click="alterar(idx)">Alterar</button>
+          <button @click="remover(p)">Remover</button>
+        </td>
+      </tr>
+    </table>
+    
   </div>
 </template>
 
 <script>
-
 export default {
   data() {
     return {
-      autor: 'Sabrina Blockwel',
-      criacao: 'criando em ' + new Date().toLocaleString(),
-      mostrarInformacoesComplementares: false,
+      autor: "Sabrina Blockwel",
+      criacao: "criando em " + new Date().toLocaleString(),
+      informacao: 'Posso colocar uma informação customizada',
       participantes: [
-        {nome: "Fulano da Silva", email: 100 },
-        {nome: "Cicrano de Souza", email: 80},
-        {nome: "Beltrano Oliveira", email: 200}
+        { nome: "Fulano da Silva", email: "fulano@gmail.com" },
+        { nome: "Cicrano de Souza", email: "cicrano@gmail.com" },
+        { nome: "Beltrano Oliveira", email: "beltrano@gmail.com" },
       ],
       participante: {
         nome: null,
-        email: 0
+        email: null
       },
-      isEdit: false,
+      alteracaoIdx: -1
     }
   },
   methods: {
-    trocarInformacoes() {
-      this.mostrarInformacoesComplementares = !this.mostrarInformacoesComplementares;
+    salvarParticipante() {
+      const participanteSalvar = Object.assign({}, this.participante)
+      if (this.alteracaoIdx > -1) {
+        this.participantes[this.alteracaoIdx] = participanteSalvar;
+      } else {
+        this.participantes.push(participanteSalvar)
+      }
+      this.reset()
     },
-    adicionarProjeto(){
-      /* --- primeira forma
-      this.projetos.push(
-        {
-          nome : this.projeto.nome,
-          tamanho : this.projeto.tamanho
-        }
-      )
-      this.projeto.nome = null
-      this.projeto.tamanho = 0
-      */
-
-      /* --- segunda forma*/
-      const projetoAdicionar = Object.assign({}, this.projeto)
-      this.projetos.push(projetoAdicionar)
-
-      this.projeto.nome = null
-      this.projeto.tamanho = 0
-      
+    reset() {
+      this.participante.nome = null
+      this.participante.email = null
+      this.alteracaoIdx = -1
     },
-    remover(projetoParaRemover){
-      if(confirm("Excluir registro?")) {
-        /* ---Primeira forma
-        this.projetos.splice(this.projetos.indexOf(projetoParaRemover), 1)
-        */
-
-        /* --- Segunda forma*/
-        this.projetos = this.projetos.filter(p => p != projetoParaRemover)
-      } 
+    remover(participanteParaRemover) {
+      if (confirm("Excluir registro?")) {
+        this.participantes = this.participantes.filter(p => p != participanteParaRemover)
+        this.reset()
+      }
     },
-    alterar(projetoParaAlterar){
-      this.projetos = projetoParaAlterar;
-      this.isEdit = true;
-
-      /*exemplo da net
-      let projetos = this.contacts.map(contactMap => {
-                        if(contactMap.id == contact.id) {
-                            return contact;
-                        }
-
-                        return contactMap;
-                    });
-
-                    this.contacts = contacts;
-                    this.isEdit = false;
-
-                    localStorage.setItem('contactsApp', JSON.stringify(contacts));
-
-                    location.reload();*/
+    alterar(idx) {
+      this.participante = Object.assign({}, this.participantes[idx])
+      this.alteracaoIdx = idx
+    }
+  },
+  computed: {
+    acao() {
+      return this.alteracaoIdx > -1 ? "Alterar" : "Adicionar"
     }
   }
 }
@@ -109,5 +95,9 @@ export default {
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+}
+
+.alteracao {
+  background-color: yellow;
 }
 </style>
