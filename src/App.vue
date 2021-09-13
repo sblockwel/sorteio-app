@@ -5,32 +5,37 @@
     
     <h2>Informações adicionais</h2>
 
-    <form @submit.prevent="salvarParticipante">
-      <label for="nome"> Nome: </label><br />
-      <input type="text" id="nome" autofocus required v-model="participante.nome" />
-      <br />
-      <label for="email"> Email: </label><br />
-      <input type="email" id="email" required v-model="participante.email" />
-      <br /><br />
-      <input type="submit" :value="acao" />
+    <form id="formulario" @submit.prevent="salvarParticipante">
+      <div class="campo">
+        <label for="nome"> Nome: </label><br />
+        <input type="text" id="nome" autofocus required v-model="participante.nome" />
+      </div>
+      <div class="campo"> 
+        <label for="email"> Email: </label>
+        <input type="email" id="email" required v-model="participante.email" />
+      </div>
+      <div id="botao" class="campo botao">
+        <input type="submit" :value="acao" />
+      </div>
     </form>
 
-    <table>
-      <tr>
-        <th>Nome</th>
-        <th>Email</th>
-        <th></th>
-      </tr>
-      <tr v-for="(p, idx) in participantes" :key="p.nome" :class="{ 'alteracao': alteracaoIdx == idx }">
-        <td>{{ p.nome }}</td>
-        <td>{{ p.email }}</td>
-        <td>
-          <button @click="alterar(idx)">Alterar</button>
-          <button @click="remover(p)">Remover</button>
-        </td>
-      </tr>
-    </table>
-    
+    <div >
+      <table class="tabela">
+        <tr>
+          <th>Nome</th>
+          <th>Email</th>
+          <th></th>
+        </tr>
+        <tr v-for="(p, idx) in participantes" :key="p.nome" :class="{ 'alteracao': alteracaoIdx == idx }">
+          <td>{{ p.nome }}</td>
+          <td>{{ p.email }}</td>
+          <td>
+            <button @click="alterar(idx)">Alterar</button>
+            <button @click="remover(p)">Remover</button>
+          </td>
+        </tr>
+      </table>
+    </div>
   </div>
 </template>
 
@@ -100,4 +105,33 @@ export default {
 .alteracao {
   background-color: yellow;
 }
+
+#formulario {
+  width: 60%; 
+  margin-left: 20%;
+  padding: 45px 15px;
+  height: 100px;
+}
+
+.campo {
+  width: 40%;
+  float: left;
+}
+
+.campo input {
+  margin: 10px 1%;
+  padding: 8px 1%;
+  width: 90%;
+}
+
+#botao {
+    width: 20%;
+    height: 50px;
+    margin-top: 17px;
+}
+
+.tabela {
+  margin: auto;
+}
+
 </style>
