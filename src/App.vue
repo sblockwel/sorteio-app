@@ -21,8 +21,7 @@
 
     <div>
       <label>Filtrar</label><br/>
-      <input type="text" id="nome" >
-      <button>Pesquisar</button>
+      <input type="text" id="nome" v-model="search">
     </div>
 
     <div >
@@ -31,7 +30,7 @@
         <th>Email</th>
         <th>Opções</th>
         
-        <tr v-for="(p, idx) in participantes" :key="p.nome" :class="{ 'alteracao': alteracaoIdx == idx }" class="linhas">
+        <tr v-for="(p, idx) in filteredItems" :key="p.nome" :class="{ 'alteracao': alteracaoIdx == idx }" class="linhas">
           <td>{{ p.nome }}</td>
           <td>{{ p.email }}</td>
           <td>
@@ -60,7 +59,8 @@ export default {
         nome: null,
         email: null
       },
-      alteracaoIdx: -1
+      alteracaoIdx: -1,
+      search: ""
     }
   },
   methods: {
@@ -97,6 +97,15 @@ export default {
   computed: {
     acao() {
       return this.alteracaoIdx > -1 ? "Alterar" : "Adicionar"
+    },
+    filteredItems() {
+
+      let part = []
+
+      part = this.participantes.filter(p => p = p.nome.toLowerCase().indexOf(this.search.toLowerCase()) > -1 )
+        
+ 
+      return part
     }
   }
 }
@@ -113,7 +122,7 @@ export default {
 }
 
 .alteracao {
-  background-color: yellow;
+  background-color:#d4d4d4
 }
 
 #formulario {
@@ -156,7 +165,8 @@ th, td {
 }
 
 tr:hover{
-  background-color:#f5f5f5
+  background-color:#d4d4d4
+
 }
 
 </style>
