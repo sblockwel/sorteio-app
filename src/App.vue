@@ -22,12 +22,14 @@
     <div>
       <label>Filtrar</label><br/>
       <input type="text" id="nome" v-model="search">
+      <br/>
+      <button @click="sortear()">Sortear </button>
     </div>
 
     <div >
       <table class="tabela">
-        <th><a href="#" @click="ordenar('nome')">Nome</a></th>
-        <th>Email</th>
+        <th @click="ordenar('nome')" class="ordenar">Nome <font-awesome-icon :icon="getTipoOrdenacao('nome')" /> </th>
+        <th @click="ordenar('email')" class="ordenar">Email <font-awesome-icon :icon="getTipoOrdenacao('email')" /> </th>
         <th>Opções</th>
         
         <tr v-for="(p, idx) in filteredItems" :key="p.nome" :class="{ 'alteracao': alteracaoIdx == idx }" class="linhas">
@@ -60,7 +62,11 @@ export default {
         email: null
       },
       alteracaoIdx: -1,
-      search: ""
+      search: "", 
+      ordemCampos: {
+        nome: null,
+        tipo: 'asc'
+      }
     }
   },
   methods: {
@@ -88,10 +94,24 @@ export default {
       this.participante = Object.assign({}, this.participantes[idx])
       this.alteracaoIdx = idx
     },
-    ordenar(chave) {
-      this.participantes.sort(function(a, b) {
-        return a[chave].localeCompare(b[chave])
-      })
+    getTipoOrdenacao(campo){
+      if (campo == this.ordemCampos.nome) {
+        if (this.ordemCampos.tipo == 'asc')
+          return 'sort-up'
+        return 'sort-down'
+      }
+      return 'sort'
+    },
+    ordenar(campo) {      
+      if(campo == this.ordemCampos.nome) {
+        this.ordemCampos.tipo = this.ordemCampos.tipo == 'asc' ? 'desc' :  'asc'
+      } 
+      this.ordemCampos.nome = campo
+      const tipoOrdem = this.ordemCampos.tipo == 'asc' ? 1 : -1
+
+      this.participantes = this.participantes.sort((a, b) =>
+        a[campo].localeCompare(b[campo]) * tipoOrdem
+      )      
     }
   },
   computed: {
@@ -167,6 +187,10 @@ th, td {
 tr:hover{
   background-color:#d4d4d4
 
+}
+
+.ordenar{
+  cursor: pointer;
 }
 
 </style>
