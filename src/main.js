@@ -1,5 +1,6 @@
 import { createApp } from 'vue'
-import App from './App.vue'
+//import App from './App.vue'
+import Pedidos from './Pedidos.vue'
 
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faSortUp, faSortDown, faSort, faTrash, faPencilAlt } from '@fortawesome/free-solid-svg-icons'
@@ -11,6 +12,6 @@ library.add(faSort)
 library.add(faTrash)
 library.add(faPencilAlt)
 
-createApp(App)
+createApp(Pedidos)
   .component("font-awesome-icon", FontAwesomeIcon)
   .mount("#app");
