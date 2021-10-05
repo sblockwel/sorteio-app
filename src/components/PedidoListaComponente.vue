@@ -30,11 +30,17 @@ export default {
   data() {
     return {
       pedidos: [
-        { numero: "", data: "", cliente: "" },
-        { numero: "", data: "", cliente: "" },
-        { numero: "", data: "", cliente: "" }
+        { produto: "Produto 1", quantidade: "5", unidade: "2.99", desconto: "0.50", total: "" },
+        { produto: "Produto 2", quantidade: "2", unidade: "7.00", desconto: "0.90", total: "" },
+        { produto: "Produto 3", quantidade: "7", unidade: "1.99", desconto: "0.00", total: "" }
       ],
-      
+      pedido: {
+          produto: null,
+          quantidade: null,
+          unidade: null,
+          desconto: null,
+          total: null
+      },      
       alteracaoIdx: -1,
       ordemCampos: {
         nome: null,
